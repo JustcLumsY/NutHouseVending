@@ -48,15 +48,14 @@ namespace NutHouseVending
         {
             Ware ware = wares.FirstOrDefault(x => x.Type == type);
             Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine($"Change product: R           ↓ Your choice ↓");
-            Console.WriteLine($"Buy Product: Enter          ---------------");
+            Console.WriteLine($"Change product: R               ↓ Your choice ↓");
+            Console.WriteLine($"Buy Product: Enter              ---------------");
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine($"                                 {ware.Type}");
+            Console.WriteLine($"                                     {ware.Type}");
             Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine($"                                 {ware.Price} Kr");
+            Console.WriteLine($"                                     {ware.Price} Kr");
             Console.WriteLine("");
             Console.WriteLine("");
-            Thread.Sleep(1500);
             return ware;
         }
         

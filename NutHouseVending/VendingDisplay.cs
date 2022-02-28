@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using NutHouseVending.Interfaces;
 
@@ -25,7 +26,6 @@ namespace NutHouseVending
                 ║            >>||Nut House Vending||<<           ║
                 ╬════════════════════════════════════════════════╬
             ");
-
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine // Content
             (@$"
@@ -56,9 +56,7 @@ namespace NutHouseVending
 
         public void SelectAProductText()
         {
-        
             var SelectText = "↑ Select a product number ↑";
-            
             Console.SetCursorPosition((Console.WindowWidth - SelectText.Length) / 2, Console.CursorTop);
             Console.ForegroundColor = ConsoleColor.Cyan;
             Console.WriteLine(SelectText);
@@ -73,16 +71,17 @@ namespace NutHouseVending
             var soldOutText = "<|SOLD OUT|>";
             Console.SetCursorPosition((Console.WindowWidth - soldOutText.Length) / 2, Console.CursorTop);
             Console.WriteLine(soldOutText);
-           //Thread.Sleep(1500);
             Console.ResetColor();
         }
 
         public void CheckAmountOfMoney(List<Ware> wares)
         { 
             var Coins = MoneyHandler.AmountOfMoney;
+         //  Ware ware = wares.FirstOrDefault(x => x.Type == type);
             VendingMachineDisplay(wares);
             Console.SetCursorPosition((Console.WindowWidth - Coins) / 2, Console.CursorTop);
             Console.ForegroundColor = ConsoleColor.Green;
+            // Console.WriteLine($"{ware.Type + ware.PRice}");
             Console.WriteLine($"{Coins}Kr");
             var notEnoughMoneyText = "Not enough money, please insert";
             Console.SetCursorPosition((Console.WindowWidth - notEnoughMoneyText.Length) / 2, Console.CursorTop);

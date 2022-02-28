@@ -29,6 +29,3 @@ namespace NutHouseVending
 
     }
 }
-//Kick, Slap, Punch methods.
-// Sjanse til å "Sette fast en f.eks flaske"
-// så må man ta "KickTheMachine();" for å få ut varen.

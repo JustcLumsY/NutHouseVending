@@ -10,6 +10,7 @@ namespace NutHouseVending
         {
             VendingMachine vendingMachine = new VendingMachine();
             var wares = vendingMachine.storage.wares;
+            
             vendingMachine.Run(wares);
         }
     }
