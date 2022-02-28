@@ -8,7 +8,7 @@ namespace NutHouseVending
 {
     internal class Storage 
     {
-        public List<Ware> wares { get; set; }
+        public static List<Ware> wares { get; set; }
       
         public Storage()
         {

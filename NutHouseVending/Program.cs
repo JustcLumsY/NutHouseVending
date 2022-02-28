@@ -9,7 +9,7 @@ namespace NutHouseVending
         public static void Main(string[] args)
         {
             VendingMachine vendingMachine = new VendingMachine();
-            var wares = vendingMachine.storage.wares;
+            var wares = Storage.wares;
             
             vendingMachine.Run(wares);
         }
