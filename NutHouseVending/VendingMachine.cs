@@ -10,10 +10,7 @@ namespace NutHouseVending
         public MoneyHandler Moneyhandler { get; set; }
         public VendingDisplay Vendingdisplay { get; set; }
         public Storage storage { get; set; }
-
         public Random rnd = new Random();
-
-        
 
         public VendingMachine()
         {
@@ -56,7 +53,7 @@ namespace NutHouseVending
                 {
                     Moneyhandler.SpendMoney(ware.Price);
                 }
-                //WHILE MONEY
+                //WHILE NOT ENOUGH MONEY
                 while (MoneyHandler.AmountOfMoney < ware.Price)
                 {
                     Vendingdisplay.CheckAmountOfMoney(wares, ware);
@@ -64,13 +61,100 @@ namespace NutHouseVending
                     if (MoneyHandler.AmountOfMoney >= ware.Price)
                     {
                         Vendingdisplay.VendingMachineDisplay(wares);
-                        ThanksForBuying(ware);
+                        ThanksForBuyingText(ware);
                     }
                 }
             }
         }
 
-        private void ThanksForBuying(Ware ware)
+        public void ProductGotStuck()
+        {
+            int randomStuck = rnd.Next(1, 100);
+            if (randomStuck < 15)
+            {
+                BrokenVendingMachine();
+                StuckTextAndAlignText();
+                var userInputBrokenMachine = Console.ReadLine();
+                switch (userInputBrokenMachine)
+                {
+                    case "1":
+                        KickVendingMachine();
+                        break;
+                    case "2":
+                        PunchVendingMachine();
+                        break;
+                    case "3":
+                        SlapVendingMachine();
+                        break;
+                }
+            }
+        }
+
+        public void KickVendingMachine()
+        {
+            int randomKick = rnd.Next(1, 100);
+            if (randomKick < 2)
+            {
+                KickMachineTextAndTextAlign();
+                VendingAlarm();
+            }
+        }
+        public void PunchVendingMachine()
+        {
+            var wares = Storage.wares;
+            int randomPunch = rnd.Next(1, 100);
+            if (randomPunch < 50)
+            {
+                var punchText = "You punched a hole in the glass and took your product";
+                Vendingdisplay.VendingMachineDisplay(wares);
+                Console.SetCursorPosition((Console.WindowWidth - punchText.Length) / 2, Console.CursorTop);
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine(punchText);
+                Thread.Sleep(1500);
+                Run(wares);
+            }
+            else
+            {
+                var punchFailText = "You punched the machine... Nothing happened";
+                Console.SetCursorPosition((Console.WindowWidth - punchFailText.Length) / 2, Console.CursorTop);
+                Console.WriteLine(punchFailText);
+                Run(wares);
+            }
+        }
+        public void SlapVendingMachine()
+        {
+            int randomSlap = rnd.Next(1, 100);
+            if (randomSlap < 80)
+            {
+                var slapText = "<You slapped the machine and saw your product fell down>";
+                Console.SetCursorPosition((Console.WindowWidth - slapText.Length) / 2, Console.CursorTop);
+                Console.WriteLine(slapText);
+
+            }
+            else
+            {
+                var wares = Storage.wares;
+                var slapFailText = "<Your slap was weak and did nothing>";
+                Vendingdisplay.VendingMachineDisplay(wares);
+                Console.SetCursorPosition((Console.WindowWidth - slapFailText.Length) / 2, Console.CursorTop);
+                Console.WriteLine(slapFailText);
+                Thread.Sleep(1500);
+                Run(wares);
+            }
+        }
+        private void VendingAlarm()
+        {
+            for (int i = 15; i > 0; i--)
+            {
+                Console.Beep();
+                if (i == 1)
+                {
+                    ProductGotStuck();
+                }
+            }
+        }
+
+        private void ThanksForBuyingText(Ware ware)
         {
             var wareType = $"<{ware.Type}>";
             var thanksForBuyingText = "↓ Thanks for buying ↓";
@@ -88,97 +172,40 @@ namespace NutHouseVending
             VendingDisplay.WhiteColor();
             Console.ReadLine();
         }
-       
-        public void ProductGotStuck()
+        private static void StuckTextAndAlignText()
         {
-            int randomStuck = rnd.Next(1, 100);
-            if (randomStuck > 10)
-            {
-                Console.ForegroundColor = ConsoleColor.White;
-                BrokenVendingMachine();
-
-                var machineGotStuck = "<The machine made a noise and stopped working>";
-                var chooseBrokenOptionText1 = "1: Kick the Machine in anger";
-                var chooseBrokenOptionText2 = "2: Punch the Machine in hope of something";
-                var chooseBrokenOptionText3 = "3: Slap it gently";
-                Console.SetCursorPosition((Console.WindowWidth - machineGotStuck.Length) / 2, Console.CursorTop);
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine(machineGotStuck);
-                Thread.Sleep(1000);
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.WriteLine("                  -------------------------------------------");
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.SetCursorPosition((Console.WindowWidth - chooseBrokenOptionText1.Length) / 2, Console.CursorTop);
-                Console.WriteLine(chooseBrokenOptionText1);
-                Console.SetCursorPosition((Console.WindowWidth - chooseBrokenOptionText2.Length) / 2, Console.CursorTop);
-                Console.WriteLine(chooseBrokenOptionText2);
-                Console.SetCursorPosition((Console.WindowWidth - chooseBrokenOptionText3.Length) / 2, Console.CursorTop);
-                Console.WriteLine(chooseBrokenOptionText3);
-                Console.ForegroundColor = ConsoleColor.White;
-                VendingDisplay.SetCursorPositionCenter();
-                var userInputBrokenMachine = Console.ReadLine();
-                switch (userInputBrokenMachine)
-                {
-                    case "1":
-                        KickVendingMachine();
-                        break;
-                    case "2":
-                        PunchVendingMachine();
-                        break;
-                    case "3":
-                        SlapVendingMachine();
-                        break;
-                }
-            }
+            Console.ForegroundColor = ConsoleColor.White;
+            var machineGotStuck = "<The machine made a noise and stopped working>";
+            var chooseBrokenOptionText1 = "1: Kick the Machine in anger";
+            var chooseBrokenOptionText2 = "2: Punch the Machine in hope of something";
+            var chooseBrokenOptionText3 = "3: Slap it gently";
+            Console.SetCursorPosition((Console.WindowWidth - machineGotStuck.Length) / 2, Console.CursorTop);
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine(machineGotStuck);
+            Thread.Sleep(1000);
+            Console.WriteLine("                  -------------------------------------------");
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.SetCursorPosition((Console.WindowWidth - chooseBrokenOptionText1.Length) / 2, Console.CursorTop);
+            Console.WriteLine(chooseBrokenOptionText1);
+            Console.SetCursorPosition((Console.WindowWidth - chooseBrokenOptionText2.Length) / 2, Console.CursorTop);
+            Console.WriteLine(chooseBrokenOptionText2);
+            Console.SetCursorPosition((Console.WindowWidth - chooseBrokenOptionText3.Length) / 2, Console.CursorTop);
+            Console.WriteLine(chooseBrokenOptionText3);
+            Console.ForegroundColor = ConsoleColor.White;
+            VendingDisplay.SetCursorPositionCenter();
         }
-        public void SlapVendingMachine()
+        private void KickMachineTextAndTextAlign()
         {
-            int randomSlap = rnd.Next(1, 100);
-            if (randomSlap > 80)
-            {
-                Console.WriteLine("You slapped the machine and saw your product fell down");
-            }
-            else
-            {
-                
-            }
-        }
-
-        public void PunchVendingMachine()
-        {
-            int randomPunch = rnd.Next(1, 100);
-            if (randomPunch > 50)
-            {
-                Console.WriteLine("You punched a hole in the glass and took your product");
-            }
-        }
-
-        public void KickVendingMachine()
-        {
-            int randomKick = rnd.Next(1, 100);
-            if (randomKick > 2)
-            {
-                var kickText = "You Kicked the machine";
-                var alarmText = "An alarm went off!";
-                Console.SetCursorPosition((Console.WindowWidth - kickText.Length) / 2, Console.CursorTop);
-                Console.WriteLine(kickText);
-                Thread.Sleep(1500);
-                Console.SetCursorPosition((Console.WindowWidth - alarmText.Length) / 2, Console.CursorTop);
-                Console.WriteLine(alarmText);
-                VendingAlarm();
-            }
-        }
-
-        private void VendingAlarm()
-        {
-            for (int i = 15; i > 0; i--)
-            {
-                Console.Beep();
-                if (i == 1)
-                {
-                    ProductGotStuck();
-                }
-            }
+            var wares = Storage.wares;
+            var kickText = "You Kicked the machine";
+            var alarmText = "An alarm went off!";
+            Console.SetCursorPosition((Console.WindowWidth - kickText.Length) / 2, Console.CursorTop);
+            Console.WriteLine(kickText);
+            Thread.Sleep(1500);
+            Console.SetCursorPosition((Console.WindowWidth - alarmText.Length) / 2, Console.CursorTop);
+            Console.WriteLine(alarmText);
+            Thread.Sleep(1500);
+            Run(wares);
         }
 
         public void BrokenVendingMachine()
@@ -194,7 +221,7 @@ namespace NutHouseVending
             ");
             Thread.Sleep(500);
             Console.ForegroundColor = ConsoleColor.White;
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < 2; i++)
             {
                 Console.Clear();
                 RedHeader();
@@ -226,7 +253,6 @@ namespace NutHouseVending
             ");
             Thread.Sleep(1000);
         }
-
         private static void WhiteHeader()
         {
             Console.Clear();
@@ -249,11 +275,6 @@ namespace NutHouseVending
                 ╬════════════════════════════════════════════════╬
             ");
         }
-
-        //Kick, Slap, Punch methods.
-        // Sjanse til å "Sette fast en f.eks flaske"
-        // så må man ta "KickTheMachine();" for å få ut varen.
-
         private static void Sleep500()
         {
             Thread.Sleep(500);

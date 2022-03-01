@@ -7,7 +7,7 @@
         public int Amount { get; set; }
         public wareEnum Type { get; set; }
 
-        public Ware(string name, int price, int amount,  wareEnum type)
+        public Ware(string name, int price, int amount, wareEnum type)
         {
             Name = name;
             Price = price;

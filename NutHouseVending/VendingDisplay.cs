@@ -75,27 +75,26 @@ namespace NutHouseVending
         }
 
         public void CheckAmountOfMoney(List<Ware> wares, Ware ware)
-        { 
+        {
+            NotEnoughMoneyTextTypeAndPriceShow(wares, ware);
+            Moneyhandler.InsertCoin();
+        }
+
+        private void NotEnoughMoneyTextTypeAndPriceShow(List<Ware> wares, Ware ware)
+        {
             var notEnoughMoneyText = "Not enough money, please insert";
             var youPicked = $"{ware.Type}";
             var kr = $"{ware.Price}Kr";
             var Coins = MoneyHandler.AmountOfMoney;
             VendingMachineDisplay(wares);
-            //youPicked
             Console.SetCursorPosition((Console.WindowWidth - youPicked.Length) / 2, Console.CursorTop);
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine($"<{youPicked}> | Coins: {Coins}");
-            //Not enough MoneyTxt
             Console.SetCursorPosition((Console.WindowWidth - notEnoughMoneyText.Length) / 2, Console.CursorTop);
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine(notEnoughMoneyText);
-            //Coins
-            //Console.SetCursorPosition((Console.WindowWidth - Coins) / 2, Console.CursorTop);
-            //Console.ForegroundColor = ConsoleColor.Green;
-            //Console.WriteLine(Coins);
             Console.ForegroundColor = ConsoleColor.White;
             SetCursorPositionCenter();
-            Moneyhandler.InsertCoin();
         }
 
         public static void WhiteColor()

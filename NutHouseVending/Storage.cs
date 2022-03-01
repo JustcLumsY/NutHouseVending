@@ -18,7 +18,7 @@ namespace NutHouseVending
         public void InitializeWares()
         {
             //Drinks
-            wares.Add(new Ware("Coca Cola", 25, 0, wareEnum.CocaCola));
+            wares.Add(new Ware("Coca Cola", 25, 10, wareEnum.CocaCola));
             wares.Add(new Ware("Fanta", 22, 10, wareEnum.Fanta));
             wares.Add(new Ware("Pepsi", 20, 10, wareEnum.Pepsi));
             wares.Add(new Ware("Urge", 22, 10, wareEnum.Urge));
@@ -47,17 +47,21 @@ namespace NutHouseVending
         public Ware GetWareInfo(wareEnum type, List<Ware> wares)
         {
             Ware ware = wares.FirstOrDefault(x => x.Type == type);
+            GetWareInfoText(ware);
+            return ware;
+        }
+
+        private static void GetWareInfoText(Ware ware)
+        {
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine($"Change product: R               ↓ Your choice ↓");
             Console.WriteLine($"Buy Product: Enter              ---------------");
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine($"                                     {ware.Type}");
+            Console.WriteLine($"                                    <{ware.Type}>");
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine($"                                     {ware.Price} Kr");
             Console.WriteLine("");
             Console.WriteLine("");
-            return ware;
         }
-        
     }
 }
