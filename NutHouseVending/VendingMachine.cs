@@ -61,6 +61,10 @@ namespace NutHouseVending
                     if (MoneyHandler.AmountOfMoney >= ware.Price)
                     {
                         Vendingdisplay.VendingMachineDisplay(wares);
+                        Moneyhandler.SpendMoney(ware.Price);
+                        var coinsBackText = $"Coins back: {MoneyHandler.AmountOfMoney}";
+                        Console.SetCursorPosition((Console.WindowWidth - coinsBackText.Length) / 2, Console.CursorTop);
+                        Console.WriteLine(coinsBackText);
                         ThanksForBuyingText(ware);
                     }
                 }
@@ -123,17 +127,18 @@ namespace NutHouseVending
         }
         public void SlapVendingMachine()
         {
+            var wares = Storage.wares;
             int randomSlap = rnd.Next(1, 100);
             if (randomSlap < 80)
             {
                 var slapText = "<You slapped the machine and saw your product fell down>";
                 Console.SetCursorPosition((Console.WindowWidth - slapText.Length) / 2, Console.CursorTop);
                 Console.WriteLine(slapText);
-
+                Thread.Sleep(1500);
+                Run(wares);
             }
             else
             {
-                var wares = Storage.wares;
                 var slapFailText = "<Your slap was weak and did nothing>";
                 Vendingdisplay.VendingMachineDisplay(wares);
                 Console.SetCursorPosition((Console.WindowWidth - slapFailText.Length) / 2, Console.CursorTop);
@@ -144,12 +149,14 @@ namespace NutHouseVending
         }
         private void VendingAlarm()
         {
+            var wares = Storage.wares;
             for (int i = 15; i > 0; i--)
             {
                 Console.Beep();
                 if (i == 1)
                 {
-                    ProductGotStuck();
+                    Thread.Sleep(1500);
+                    Run(wares);
                 }
             }
         }

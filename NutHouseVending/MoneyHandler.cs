@@ -10,6 +10,7 @@ namespace NutHouseVending
         {
             if (AmountOfMoney >= price)
             {
+                
                 return true;
             }
             return false;
@@ -26,6 +27,5 @@ namespace NutHouseVending
             var userInput = Convert.ToInt32(Console.ReadLine());
             AmountOfMoney += userInput;
         }
-
     }
 }
