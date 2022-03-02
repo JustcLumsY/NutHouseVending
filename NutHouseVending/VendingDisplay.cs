@@ -71,13 +71,19 @@ namespace NutHouseVending
             VendingMachineDisplay(wares);
             Console.SetCursorPosition((Console.WindowWidth - youPicked.Length) / 2, Console.CursorTop);
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine($"<{youPicked}> | Coins: {Coins}");
+            Console.WriteLine($"<{youPicked}> {kr}");
+            if (MoneyHandler.AmountOfMoney > 1)
+            {
+                Console.SetCursorPosition((Console.WindowWidth - Coins) / 2, Console.CursorTop);
+                Console.WriteLine($"{Coins}Kr");
+            }
+            
+        
             Console.SetCursorPosition((Console.WindowWidth - notEnoughMoneyText.Length) / 2, Console.CursorTop);
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine(notEnoughMoneyText);
             Console.ForegroundColor = ConsoleColor.White;
             SetCursorPositionCenter();
-            //ResetSwitch(wares);
         }
         public void SoldOut(List<Ware> wares)
         {
