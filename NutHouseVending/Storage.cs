@@ -13,7 +13,6 @@ namespace NutHouseVending
         public Storage()
         {
             wares = new List<Ware>();
-            
         }
         public void InitializeWares()
         {
@@ -55,13 +54,13 @@ namespace NutHouseVending
         {
             var resetText = "Change product: R ";
             Console.WriteLine(resetText);
-            Console.ForegroundColor = ConsoleColor.Cyan;
+            VendingDisplay.CyanTextColor();
             Console.WriteLine($"                                ↓ Your choice ↓");
-            Console.ForegroundColor = ConsoleColor.White;
+            VendingDisplay.WhiteTextColor();
             Console.WriteLine($"Buy Product: Enter              ---------------");
-            Console.ForegroundColor = ConsoleColor.Green;
+            VendingDisplay.GreenTextColor();
             Console.WriteLine($"                                    <{ware.Type}>");
-            Console.ForegroundColor = ConsoleColor.White;
+            VendingDisplay.WhiteTextColor();
             Console.WriteLine($"                                     {ware.Price} Kr");
             Console.WriteLine("");
             Console.WriteLine("");

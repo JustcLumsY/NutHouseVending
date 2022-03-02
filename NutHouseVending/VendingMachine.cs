@@ -10,7 +10,7 @@ namespace NutHouseVending
         public MoneyHandler Moneyhandler { get; set; }
         public VendingDisplay Vendingdisplay { get; set; }
         public Storage storage { get; set; }
-        public Random rnd = new Random();
+        public Random Rnd = new Random();
 
         public VendingMachine()
         {
@@ -40,7 +40,6 @@ namespace NutHouseVending
             {
                 Vendingdisplay.VendingMachineDisplay(wares);
                 Ware ware = storage.GetWareInfo((wareEnum)userInput, wares);
-                
                 if (Moneyhandler.HasEnoughMoney(ware.Price))
                 {
                     Moneyhandler.SpendMoney(ware.Price);
@@ -77,7 +76,7 @@ namespace NutHouseVending
         {
             var wares = Storage.wares;
             Console.Clear();
-            Console.ForegroundColor = ConsoleColor.Red;
+            VendingDisplay.RedTextColor();
             Console.WriteLine // Header
             (@"
                 ╬════════════════════════════════════════════════╬
@@ -85,7 +84,7 @@ namespace NutHouseVending
                 ╬════════════════════════════════════════════════╬
             ");
             Thread.Sleep(500);
-            Console.ForegroundColor = ConsoleColor.White;
+            VendingDisplay.WhiteTextColor();
             for (int i = 0; i < 2; i++)
             {
                 Console.Clear();
@@ -95,7 +94,7 @@ namespace NutHouseVending
                 Thread.Sleep(500);
                 RedHeader();
             }
-            Console.ForegroundColor = ConsoleColor.White;
+            VendingDisplay.WhiteTextColor();
             Console.WriteLine // Content
             (@$"
                 ╬════════════════════════════════════════════════╬     
@@ -120,7 +119,7 @@ namespace NutHouseVending
         }
         public void ProductGotStuck()
         {
-            int randomStuck = rnd.Next(1, 100);
+            int randomStuck = Rnd.Next(1, 100);
             if (randomStuck < 15)
             {
                 BrokenVendingMachine();
@@ -142,7 +141,7 @@ namespace NutHouseVending
         }
         public void KickVendingMachine()
         {
-            int randomKick = rnd.Next(1, 100);
+            int randomKick = Rnd.Next(1, 100);
             if (randomKick < 2)
             {
                 KickMachineTextAndTextAlign();
@@ -152,13 +151,13 @@ namespace NutHouseVending
         public void PunchVendingMachine()
         {
             var wares = Storage.wares;
-            int randomPunch = rnd.Next(1, 100);
+            int randomPunch = Rnd.Next(1, 100);
             if (randomPunch < 50)
             {
                 var punchText = "You punched a hole in the glass and took your product";
                 Vendingdisplay.VendingMachineDisplay(wares);
                 Console.SetCursorPosition((Console.WindowWidth - punchText.Length) / 2, Console.CursorTop);
-                Console.ForegroundColor = ConsoleColor.Green;
+                VendingDisplay.GreenTextColor();
                 Console.WriteLine(punchText);
                 Thread.Sleep(1500);
                 Run(wares);
@@ -174,7 +173,7 @@ namespace NutHouseVending
         public void SlapVendingMachine()
         {
             var wares = Storage.wares;
-            int randomSlap = rnd.Next(1, 100);
+            int randomSlap = Rnd.Next(1, 100);
             if (randomSlap < 80)
             {
                 var slapText = "<You slapped the machine and saw your product fell down>";
@@ -195,24 +194,24 @@ namespace NutHouseVending
         }
         private static void StuckTextAndAlignText()
         {
-            Console.ForegroundColor = ConsoleColor.White;
+            VendingDisplay.WhiteTextColor();
             var machineGotStuck = "<The machine made a noise and stopped working>";
             var chooseBrokenOptionText1 = "1: Kick the Machine in anger";
             var chooseBrokenOptionText2 = "2: Punch the Machine in hope of something";
             var chooseBrokenOptionText3 = "3: Slap it gently";
             Console.SetCursorPosition((Console.WindowWidth - machineGotStuck.Length) / 2, Console.CursorTop);
-            Console.ForegroundColor = ConsoleColor.White;
+            VendingDisplay.WhiteTextColor();
             Console.WriteLine(machineGotStuck);
             Thread.Sleep(1000);
             Console.WriteLine("                  -------------------------------------------");
-            Console.ForegroundColor = ConsoleColor.Red;
+            VendingDisplay.RedTextColor();
             Console.SetCursorPosition((Console.WindowWidth - chooseBrokenOptionText1.Length) / 2, Console.CursorTop);
             Console.WriteLine(chooseBrokenOptionText1);
             Console.SetCursorPosition((Console.WindowWidth - chooseBrokenOptionText2.Length) / 2, Console.CursorTop);
             Console.WriteLine(chooseBrokenOptionText2);
             Console.SetCursorPosition((Console.WindowWidth - chooseBrokenOptionText3.Length) / 2, Console.CursorTop);
             Console.WriteLine(chooseBrokenOptionText3);
-            Console.ForegroundColor = ConsoleColor.White;
+            VendingDisplay.WhiteTextColor();
             VendingDisplay.SetCursorPositionCenter();
         }
         private void KickMachineTextAndTextAlign()
@@ -257,9 +256,9 @@ namespace NutHouseVending
             Sleep500();
             ProductGotStuck();
             Console.SetCursorPosition((Console.WindowWidth - wareType.Length) / 2, Console.CursorTop);
-            VendingDisplay.GreenColor();
+            VendingDisplay.GreenTextColor();
             Console.WriteLine(wareType);
-            VendingDisplay.WhiteColor();
+            VendingDisplay.WhiteTextColor();
             Thread.Sleep(3000);
             MoneyHandler.AmountOfMoney = 0;
             Run(wares);
@@ -267,7 +266,7 @@ namespace NutHouseVending
         private static void WhiteHeader()
         {
             Console.Clear();
-            Console.ForegroundColor = ConsoleColor.White;
+            VendingDisplay.WhiteTextColor();
             Console.WriteLine
             (@"
                 ╬════════════════════════════════════════════════╬
@@ -278,7 +277,7 @@ namespace NutHouseVending
         private static void RedHeader()
         {
             Console.Clear();
-            Console.ForegroundColor = ConsoleColor.Red;
+            VendingDisplay.RedTextColor();
             Console.WriteLine
             (@"
                 ╬════════════════════════════════════════════════╬
