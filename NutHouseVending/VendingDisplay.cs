@@ -12,7 +12,7 @@ namespace NutHouseVending
         public VendingDisplay()
         {
             Moneyhandler = new MoneyHandler();
-            Console.SetWindowSize(80, 35);
+            Console.SetWindowSize(80, 45);
         }
 
         public void VendingMachineDisplay(List<Ware> wares)
@@ -21,31 +21,37 @@ namespace NutHouseVending
             var totalCoin = MoneyHandler.AmountOfMoney;
             Console.ForegroundColor = ConsoleColor.Cyan;
             Console.WriteLine // Header
-            (@"
-                ╬════════════════════════════════════════════════╬
-                ║            >>||Nut House Vending||<<           ║
-                ╬════════════════════════════════════════════════╬
+            ($@"
+            ══════════════════════════════════════════════════════════
+            ║║║ ╬════════════════════════════════════════════════╬ ║║║
+            ║║║ ║            >>||Nut House Vending||<<           ║ ║║║
+            ║║║ ╬════════════════════════════════════════════════╬ ║║║
+            ══════════════════════════════════════════════════════════    
             ");
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine // Content
             (@$"
-                ╬════════════════════════════════════════════════╬     
-                ║  <{wares[0].Type}>  |  <{wares[1].Type}>  |  <{wares[2].Type}> |  <{wares[3].Type}>  ║    
-                ║     {wares[0].Price}Kr     |    {wares[1].Price}Kr   |   {wares[2].Price}Kr   |    {wares[3].Price}Kr  ║   
-                ║  Nr: {(int)wares[0].Type}       |  Nr: {(int)wares[1].Type}    |  Nr: {(int)wares[2].Type}   |  Nr: {(int)wares[3].Type}   ║ 
-                ║              |           |          |          ║
-                ║------------------------------------------------║
-                ║    <{wares[4].Type}>    |   <{wares[5].Type}>    |<{wares[6].Type}>|  <{wares[7].Type}>  ║
-                ║     {wares[4].Price}Kr     |    {wares[5].Price}Kr   |   {wares[6].Price}Kr   |   {wares[7].Price}Kr   ║
-                ║  Nr: {(int)wares[4].Type}       |  Nr: {(int)wares[5].Type}    |  Nr: {(int)wares[6].Type}   | Nr: {(int)wares[7].Type}    ║
-                ║              |           |          |          ║       
-                ║------------------------------------------------║
-                ║  <{wares[8].Type}>  |  <{wares[9].Type}>   |  <{wares[10].Type}>  |  <{wares[11].Type}>  ║
-                ║     {wares[8].Price}Kr     |   {wares[9].Price}Kr    |   {wares[10].Price}Kr   |   {wares[11].Price}Kr   ║
-                ║  Nr: {(int)wares[8].Type}      |  Nr: {(int)wares[9].Type}    |  Nr: {(int)wares[10].Type}  |  Nr: {(int)wares[11].Type}  ║
-                ║              |           |          |          ║
-                ╬════════════════════════════════════════════════╬
-                                                           
+            ══════════════════════════════════════════════════════════
+            ║║║ ╬════════════════════════════════════════════════╬ ║║║     
+            ║║║ ║  <{wares[0].Type}>  |  <{wares[1].Type}>  |  <{wares[2].Type}> |  <{wares[3].Type}>  ║ ║║║    
+            ║║║ ║     {wares[0].Price}Kr     |    {wares[1].Price}Kr   |   {wares[2].Price}Kr   |    {wares[3].Price}Kr  ║ ║║║   
+            ║║║ ║  Nr: {(int)wares[0].Type}       |  Nr: {(int)wares[1].Type}    |  Nr: {(int)wares[2].Type}   |  Nr: {(int)wares[3].Type}   ║ ║║║ 
+            ║║║ ║              |           |          |          ║ ║║║
+            ║║║ ║------------------------------------------------║ ║║║
+            ║║║ ║    <{wares[4].Type}>    |   <{wares[5].Type}>    |<{wares[6].Type}>|  <{wares[7].Type}>  ║ ║║║
+            ║║║ ║     {wares[4].Price}Kr     |    {wares[5].Price}Kr   |   {wares[6].Price}Kr   |   {wares[7].Price}Kr   ║ ║║║
+            ║║║ ║  Nr: {(int)wares[4].Type}       |  Nr: {(int)wares[5].Type}    |  Nr: {(int)wares[6].Type}   | Nr: {(int)wares[7].Type}    ║ ║║║
+            ║║║ ║              |           |          |          ║ ║║║       
+            ║║║ ║------------------------------------------------║ ║║║
+            ║║║ ║  <{wares[8].Type}>  |  <{wares[9].Type}>   |  <{wares[10].Type}>  |  <{wares[11].Type}>  ║ ║║║
+            ║║║ ║     {wares[8].Price}Kr     |   {wares[9].Price}Kr    |   {wares[10].Price}Kr   |   {wares[11].Price}Kr   ║ ║║║
+            ║║║ ║  Nr: {(int)wares[8].Type}      |  Nr: {(int)wares[9].Type}    |  Nr: {(int)wares[10].Type}  |  Nr: {(int)wares[11].Type}  ║ ║║║
+            ║║║ ║              |           |          |          ║ ║║║
+            ║║║ ╬════════════════════════════════════════════════╬ ║║║
+            ══════════════════════════════════════════════════════════
+            ║║║════════════════════════════════════════════════════║║║
+            ══════════════════════════════════════════════════════════   
+
             ");
         }
 
@@ -77,8 +83,6 @@ namespace NutHouseVending
                 Console.SetCursorPosition((Console.WindowWidth - Coins) / 2, Console.CursorTop);
                 Console.WriteLine($"{Coins}Kr");
             }
-            
-        
             Console.SetCursorPosition((Console.WindowWidth - notEnoughMoneyText.Length) / 2, Console.CursorTop);
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine(notEnoughMoneyText);
