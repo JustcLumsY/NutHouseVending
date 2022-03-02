@@ -49,11 +49,6 @@ namespace NutHouseVending
             ");
         }
 
-        public static void SetCursorPositionCenter()
-        {
-            Console.SetCursorPosition((Console.WindowWidth) / 2, Console.CursorTop);
-        }
-
         public void SelectAProductText()
         {
             var SelectText = "↑ Select a product number ↑";
@@ -62,24 +57,11 @@ namespace NutHouseVending
             Console.WriteLine(SelectText);
             Console.ForegroundColor = ConsoleColor.White;
         }
-
-        public void SoldOut(List<Ware> wares)
-        {
-            VendingMachineDisplay(wares);
-            RedColor();
-            Console.WriteLine(wares);
-            var soldOutText = "<|SOLD OUT|>";
-            Console.SetCursorPosition((Console.WindowWidth - soldOutText.Length) / 2, Console.CursorTop);
-            Console.WriteLine(soldOutText);
-            Console.ResetColor();
-        }
-
         public void CheckAmountOfMoney(List<Ware> wares, Ware ware)
         {
             NotEnoughMoneyTextTypeAndPriceShow(wares, ware);
             Moneyhandler.InsertCoin();
         }
-
         private void NotEnoughMoneyTextTypeAndPriceShow(List<Ware> wares, Ware ware)
         {
             var notEnoughMoneyText = "Not enough money, please insert";
@@ -95,24 +77,34 @@ namespace NutHouseVending
             Console.WriteLine(notEnoughMoneyText);
             Console.ForegroundColor = ConsoleColor.White;
             SetCursorPositionCenter();
+            //ResetSwitch(wares);
         }
-
+        public void SoldOut(List<Ware> wares)
+        {
+            VendingMachineDisplay(wares);
+            RedColor();
+            Console.WriteLine(wares);
+            var soldOutText = "<|SOLD OUT|>";
+            Console.SetCursorPosition((Console.WindowWidth - soldOutText.Length) / 2, Console.CursorTop);
+            Console.WriteLine(soldOutText);
+            Console.ResetColor();
+        }
         public static void WhiteColor()
         {
             Console.ForegroundColor = ConsoleColor.White;
         }
-
         public static void GreenColor()
         {
             Console.ForegroundColor = ConsoleColor.Green;
         }
-
         public static void RedColor()
         {
             Console.ForegroundColor = ConsoleColor.Red;
         }
-
-
+        public static void SetCursorPositionCenter()
+        {
+            Console.SetCursorPosition((Console.WindowWidth) / 2, Console.CursorTop);
+        }
     }
 }
 

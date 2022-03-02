@@ -53,8 +53,11 @@ namespace NutHouseVending
 
         private static void GetWareInfoText(Ware ware)
         {
+            var resetText = "Change product: R ";
+            Console.WriteLine(resetText);
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine($"                                ↓ Your choice ↓");
             Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine($"Change product: R               ↓ Your choice ↓");
             Console.WriteLine($"Buy Product: Enter              ---------------");
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine($"                                    <{ware.Type}>");

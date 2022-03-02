@@ -24,11 +24,11 @@ namespace NutHouseVending
         {
             Vendingdisplay.VendingMachineDisplay(wares);
             Vendingdisplay.SelectAProductText();
-            CheckStorage(wares);
+            CheckEnoughCoinsAndStorage(wares);
             KickVendingMachine();
         }
 
-        private void CheckStorage(List<Ware> wares)
+        private void CheckEnoughCoinsAndStorage(List<Ware> wares)
         {
             VendingDisplay.SetCursorPositionCenter();
             var userInput = Convert.ToInt32(Console.ReadLine());
@@ -40,24 +40,25 @@ namespace NutHouseVending
             {
                 Vendingdisplay.VendingMachineDisplay(wares);
                 Ware ware = storage.GetWareInfo((wareEnum)userInput, wares);
+                
+                if (Moneyhandler.HasEnoughMoney(ware.Price))
+                {
+                    Moneyhandler.SpendMoney(ware.Price);
+                }
                 var userInput2 = Console.ReadLine();
                 switch (userInput2)
                 {
                     case "r":
                     case "R":
+                        Console.Clear();
                         Run(wares);
                         break;
                 }
 
-                if (Moneyhandler.HasEnoughMoney(ware.Price))
-                {
-                    Moneyhandler.SpendMoney(ware.Price);
-                }
                 //WHILE NOT ENOUGH MONEY
-                while (MoneyHandler.AmountOfMoney < ware.Price)
+                 while (MoneyHandler.AmountOfMoney < ware.Price)
                 {
                     Vendingdisplay.CheckAmountOfMoney(wares, ware);
-
                     if (MoneyHandler.AmountOfMoney >= ware.Price)
                     {
                         Vendingdisplay.VendingMachineDisplay(wares);
@@ -70,7 +71,53 @@ namespace NutHouseVending
                 }
             }
         }
-
+        
+        //BROKEN MACHINE Methods
+        public void BrokenVendingMachine()
+        {
+            var wares = Storage.wares;
+            Console.Clear();
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine // Header
+            (@"
+                ╬════════════════════════════════════════════════╬
+                ║               >>|| Error 404 ||<<              ║
+                ╬════════════════════════════════════════════════╬
+            ");
+            Thread.Sleep(500);
+            Console.ForegroundColor = ConsoleColor.White;
+            for (int i = 0; i < 2; i++)
+            {
+                Console.Clear();
+                RedHeader();
+                Thread.Sleep(500);
+                WhiteHeader();
+                Thread.Sleep(500);
+                RedHeader();
+            }
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine // Content
+            (@$"
+                ╬════════════════════════════════════════════════╬     
+                ║  <{wares[0].Type}>  |  <{wares[1].Type}>  |  <{wares[2].Type}> |  <{wares[3].Type}>  ║    
+                ║     {wares[0].Price}Kr     |    {wares[1].Price}Kr   |   {wares[2].Price}Kr   |    {wares[3].Price}Kr  ║   
+                ║  Nr: {(int)wares[0].Type}       |  Nr: {(int)wares[1].Type}    |  Nr: {(int)wares[2].Type}   |  Nr: {(int)wares[3].Type}   ║ 
+                ║              |           |          |          ║
+                ║------------------------------------------------║
+                ║    <{wares[4].Type}>    |   <{wares[5].Type}>    |<{wares[6].Type}>|  <{wares[7].Type}>  ║
+                ║     {wares[4].Price}Kr     |    {wares[5].Price}Kr   |   {wares[6].Price}Kr   |   {wares[7].Price}Kr   ║
+                ║  Nr: {(int)wares[4].Type}       |  Nr: {(int)wares[5].Type}    |  Nr: {(int)wares[6].Type}   | Nr: {(int)wares[7].Type}    ║
+                ║              |           |          |          ║       
+                ║------------------------------------------------║
+                ║  <{wares[8].Type}>  |  <{wares[9].Type}>   |  <{wares[10].Type}>  |  <{wares[11].Type}>  ║
+                ║     {wares[8].Price}Kr     |   {wares[9].Price}Kr    |   {wares[10].Price}Kr   |   {wares[11].Price}Kr   ║
+                ║  Nr: {(int)wares[8].Type}      |  Nr: {(int)wares[9].Type}    |  Nr: {(int)wares[10].Type}  |  Nr: {(int)wares[11].Type}  ║
+                ║              |           |          |          ║
+                ╬════════════════════════════════════════════════╬
+                                                           
+            ");
+            Thread.Sleep(1000);
+        }
         public void ProductGotStuck()
         {
             int randomStuck = rnd.Next(1, 100);
@@ -93,7 +140,6 @@ namespace NutHouseVending
                 }
             }
         }
-
         public void KickVendingMachine()
         {
             int randomKick = rnd.Next(1, 100);
@@ -147,38 +193,6 @@ namespace NutHouseVending
                 Run(wares);
             }
         }
-        private void VendingAlarm()
-        {
-            var wares = Storage.wares;
-            for (int i = 15; i > 0; i--)
-            {
-                Console.Beep();
-                if (i == 1)
-                {
-                    Thread.Sleep(1500);
-                    Run(wares);
-                }
-            }
-        }
-
-        private void ThanksForBuyingText(Ware ware)
-        {
-            var wareType = $"<{ware.Type}>";
-            var thanksForBuyingText = "↓ Thanks for buying ↓";
-            var arrow1 = "|         |";
-            Console.SetCursorPosition((Console.WindowWidth - thanksForBuyingText.Length) / 2, Console.CursorTop);
-            Console.WriteLine(thanksForBuyingText);
-            Sleep500();
-            Console.SetCursorPosition((Console.WindowWidth - arrow1.Length) / 2, Console.CursorTop);
-            Console.WriteLine(arrow1);
-            Sleep500();
-            ProductGotStuck();
-            Console.SetCursorPosition((Console.WindowWidth - wareType.Length) / 2, Console.CursorTop);
-            VendingDisplay.GreenColor();
-            Console.WriteLine(wareType);
-            VendingDisplay.WhiteColor();
-            Console.ReadLine();
-        }
         private static void StuckTextAndAlignText()
         {
             Console.ForegroundColor = ConsoleColor.White;
@@ -214,51 +228,41 @@ namespace NutHouseVending
             Thread.Sleep(1500);
             Run(wares);
         }
-
-        public void BrokenVendingMachine()
+        private void VendingAlarm()
         {
             var wares = Storage.wares;
-            Console.Clear();
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine // Header
-            (@"
-                ╬════════════════════════════════════════════════╬
-                ║               >>|| Error 404 ||<<              ║
-                ╬════════════════════════════════════════════════╬
-            ");
-            Thread.Sleep(500);
-            Console.ForegroundColor = ConsoleColor.White;
-            for (int i = 0; i < 2; i++)
+            for (int i = 15; i > 0; i--)
             {
-                Console.Clear();
-                RedHeader();
-                Thread.Sleep(500);
-                WhiteHeader();
-                Thread.Sleep(500);
-                RedHeader();
+                Console.Beep();
+                if (i == 1)
+                {
+                    Thread.Sleep(1500);
+                    Run(wares);
+                }
             }
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine // Content
-            (@$"
-                ╬════════════════════════════════════════════════╬     
-                ║  <{wares[0].Type}>  |  <{wares[1].Type}>  |  <{wares[2].Type}> |  <{wares[3].Type}>  ║    
-                ║     {wares[0].Price}Kr     |    {wares[1].Price}Kr   |   {wares[2].Price}Kr   |    {wares[3].Price}Kr  ║   
-                ║  Nr: {(int)wares[0].Type}       |  Nr: {(int)wares[1].Type}    |  Nr: {(int)wares[2].Type}   |  Nr: {(int)wares[3].Type}   ║ 
-                ║              |           |          |          ║
-                ║------------------------------------------------║
-                ║    <{wares[4].Type}>    |   <{wares[5].Type}>    |<{wares[6].Type}>|  <{wares[7].Type}>  ║
-                ║     {wares[4].Price}Kr     |    {wares[5].Price}Kr   |   {wares[6].Price}Kr   |   {wares[7].Price}Kr   ║
-                ║  Nr: {(int)wares[4].Type}       |  Nr: {(int)wares[5].Type}    |  Nr: {(int)wares[6].Type}   | Nr: {(int)wares[7].Type}    ║
-                ║              |           |          |          ║       
-                ║------------------------------------------------║
-                ║  <{wares[8].Type}>  |  <{wares[9].Type}>   |  <{wares[10].Type}>  |  <{wares[11].Type}>  ║
-                ║     {wares[8].Price}Kr     |   {wares[9].Price}Kr    |   {wares[10].Price}Kr   |   {wares[11].Price}Kr   ║
-                ║  Nr: {(int)wares[8].Type}      |  Nr: {(int)wares[9].Type}    |  Nr: {(int)wares[10].Type}  |  Nr: {(int)wares[11].Type}  ║
-                ║              |           |          |          ║
-                ╬════════════════════════════════════════════════╬
-                                                           
-            ");
-            Thread.Sleep(1000);
+        }
+        //---------------------------------
+
+        private void ThanksForBuyingText(Ware ware)
+        {
+            var wares = Storage.wares;
+            var wareType = $"<{ware.Type}>";
+            var thanksForBuyingText = "↓ Thanks for buying ↓";
+            var arrow1 = "|         |";
+            Console.SetCursorPosition((Console.WindowWidth - thanksForBuyingText.Length) / 2, Console.CursorTop);
+            Console.WriteLine(thanksForBuyingText);
+            Sleep500();
+            Console.SetCursorPosition((Console.WindowWidth - arrow1.Length) / 2, Console.CursorTop);
+            Console.WriteLine(arrow1);
+            Sleep500();
+            ProductGotStuck();
+            Console.SetCursorPosition((Console.WindowWidth - wareType.Length) / 2, Console.CursorTop);
+            VendingDisplay.GreenColor();
+            Console.WriteLine(wareType);
+            VendingDisplay.WhiteColor();
+            Thread.Sleep(3000);
+            MoneyHandler.AmountOfMoney = 0;
+            Run(wares);
         }
         private static void WhiteHeader()
         {
@@ -286,6 +290,13 @@ namespace NutHouseVending
         {
             Thread.Sleep(500);
         }
-
+        //private void CheckKeyEnter()
+        //{
+        //    var wares = Storage.wares;
+        //    if (Console.ReadKey().Key == ConsoleKey.Enter)
+        //    {
+        //        CheckEnoughCoinsAndStorage(wares);
+        //    }
+        //}
     }
 }
