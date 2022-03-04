@@ -7,10 +7,11 @@ namespace NutHouseVending
 {
     internal class VendingMachine
     {
-        public MoneyHandler Moneyhandler { get; set; }
-        public VendingDisplay Vendingdisplay { get; set; }
-        public Storage storage { get; set; }
+        public MoneyHandler Moneyhandler { get;}
+        public VendingDisplay Vendingdisplay { get; }
+        public Storage storage { get; }
         public Random Rnd = new Random();
+        
 
         public VendingMachine()
         {
@@ -30,53 +31,49 @@ namespace NutHouseVending
 
         private void CheckEnoughCoinsAndStorage(List<Ware> wares)
         {
+            //UserInput in Int
             VendingDisplay.SetCursorPositionCenter();
             var userInput = Convert.ToInt32(Console.ReadLine());
-            if (!storage.CheckStorage((wareEnum) userInput))
-            {
-                Vendingdisplay.SoldOut(wares);
-            }
-            else
-            {
-                Vendingdisplay.VendingMachineDisplay(wares);
-                Ware ware = storage.GetWareInfo((wareEnum)userInput, wares);
-                if (Moneyhandler.HasEnoughMoney(ware.Price))
-                {
-                    Moneyhandler.SpendMoney(ware.Price);
-                }
-                var userInput2 = Console.ReadLine();
-                switch (userInput2)
-                {
-                    case "r":
-                    case "R":
-                        Console.Clear();
-                        Run(wares);
-                        break;
-                }
 
-                //WHILE NOT ENOUGH MONEY
-                 while (MoneyHandler.AmountOfMoney < ware.Price)
-                {
-                    Vendingdisplay.CheckAmountOfMoney(wares, ware);
-                    if (MoneyHandler.AmountOfMoney >= ware.Price)
-                    {
-                        Vendingdisplay.VendingMachineDisplay(wares);
-                        Moneyhandler.SpendMoney(ware.Price);
-                        var coinsBackText = $"Coins back: {MoneyHandler.AmountOfMoney}";
-                        Console.SetCursorPosition((Console.WindowWidth - coinsBackText.Length) / 2, Console.CursorTop);
-                        Console.WriteLine(coinsBackText);
-                        ThanksForBuyingText(ware);
-                    }
-                }
+            //Check storage
+            if (!storage.CheckStorage((wareEnum) userInput)) { Vendingdisplay.SoldOut(wares); }
+
+           //Ware info and If EnoughMoney, SpendMoney
+            Vendingdisplay.VendingMachineDisplay(wares);
+            var ware = storage.GetWareInfo((wareEnum)userInput, wares);
+            if (Moneyhandler.HasEnoughMoney(ware.Price)) { Moneyhandler.SpendMoney(ware.Price); }
+
+            //Reset product
+            var userInput2 = Console.ReadLine();
+            if (userInput2 is "R" or "r") { Console.Clear(); Run(wares); }
+            
+            //WHILE NOT ENOUGH MONEY
+            WhileNotEnoughMoneyCheckOrSpendMoney(wares, ware);
+        }
+
+        private void WhileNotEnoughMoneyCheckOrSpendMoney(List<Ware> wares, Ware ware)
+        {
+            while (MoneyHandler.AmountOfMoney < ware.Price)
+            {
+                Vendingdisplay.CheckAmountOfMoney(wares, ware);
+                if (MoneyHandler.AmountOfMoney < ware.Price) continue;
+                Vendingdisplay.VendingMachineDisplay(wares);
+                Moneyhandler.SpendMoney(ware.Price);
+                var coinsBackText = $"Coins back: {MoneyHandler.AmountOfMoney}";
+                Console.SetCursorPosition((Console.WindowWidth - coinsBackText.Length) / 2, Console.CursorTop);
+                VendingDisplay.TextColor(ConsoleColor.Green);
+                Console.WriteLine(coinsBackText);
+                VendingDisplay.TextColor(ConsoleColor.Cyan);
+                ThanksForBuyingText(ware);
             }
         }
-        
+
         //BROKEN MACHINE Methods
         public void BrokenVendingMachine()
         {
             var wares = Storage.wares;
             Console.Clear();
-            VendingDisplay.RedTextColor();
+            HeaderColor(ConsoleColor.Red);
             Console.WriteLine // Header
             (@"
                 ╬════════════════════════════════════════════════╬
@@ -84,17 +81,17 @@ namespace NutHouseVending
                 ╬════════════════════════════════════════════════╬
             ");
             Thread.Sleep(500);
-            VendingDisplay.WhiteTextColor();
-            for (int i = 0; i < 2; i++)
+            HeaderColor(ConsoleColor.White);
+            for (var i = 0; i < 2; i++)
             {
                 Console.Clear();
-                RedHeader();
+                HeaderColor(ConsoleColor.Red);
                 Thread.Sleep(500);
-                WhiteHeader();
+                HeaderColor(ConsoleColor.White);
                 Thread.Sleep(500);
-                RedHeader();
+                HeaderColor(ConsoleColor.Red);
             }
-            VendingDisplay.WhiteTextColor();
+            HeaderColor(ConsoleColor.White);
             Console.WriteLine // Content
             (@$"
                 ╬════════════════════════════════════════════════╬     
@@ -120,7 +117,7 @@ namespace NutHouseVending
         public void ProductGotStuck()
         {
             int randomStuck = Rnd.Next(1, 100);
-            if (randomStuck < 15)
+            if (randomStuck < 80)
             {
                 BrokenVendingMachine();
                 StuckTextAndAlignText();
@@ -141,23 +138,21 @@ namespace NutHouseVending
         }
         public void KickVendingMachine()
         {
-            int randomKick = Rnd.Next(1, 100);
-            if (randomKick < 2)
-            {
-                KickMachineTextAndTextAlign();
-                VendingAlarm();
-            }
+            var randomKick = Rnd.Next(1, 100);
+            if (randomKick >= 30) return;
+            KickMachineTextAndTextAlign();
+            VendingAlarm();
         }
         public void PunchVendingMachine()
         {
             var wares = Storage.wares;
-            int randomPunch = Rnd.Next(1, 100);
+            var randomPunch = Rnd.Next(1, 100);
             if (randomPunch < 50)
             {
                 var punchText = "You punched a hole in the glass and took your product";
                 Vendingdisplay.VendingMachineDisplay(wares);
                 Console.SetCursorPosition((Console.WindowWidth - punchText.Length) / 2, Console.CursorTop);
-                VendingDisplay.GreenTextColor();
+                VendingDisplay.TextColor(ConsoleColor.Green);
                 Console.WriteLine(punchText);
                 Thread.Sleep(1500);
                 Run(wares);
@@ -173,7 +168,7 @@ namespace NutHouseVending
         public void SlapVendingMachine()
         {
             var wares = Storage.wares;
-            int randomSlap = Rnd.Next(1, 100);
+            var randomSlap = Rnd.Next(1, 100);
             if (randomSlap < 80)
             {
                 var slapText = "<You slapped the machine and saw your product fell down>";
@@ -194,24 +189,24 @@ namespace NutHouseVending
         }
         private static void StuckTextAndAlignText()
         {
-            VendingDisplay.WhiteTextColor();
+            VendingDisplay.TextColor(ConsoleColor.White);
             var machineGotStuck = "<The machine made a noise and stopped working>";
             var chooseBrokenOptionText1 = "1: Kick the Machine in anger";
             var chooseBrokenOptionText2 = "2: Punch the Machine in hope of something";
             var chooseBrokenOptionText3 = "3: Slap it gently";
             Console.SetCursorPosition((Console.WindowWidth - machineGotStuck.Length) / 2, Console.CursorTop);
-            VendingDisplay.WhiteTextColor();
+            VendingDisplay.TextColor(ConsoleColor.White);
             Console.WriteLine(machineGotStuck);
             Thread.Sleep(1000);
             Console.WriteLine("                  -------------------------------------------");
-            VendingDisplay.RedTextColor();
+            VendingDisplay.TextColor(ConsoleColor.Red);
             Console.SetCursorPosition((Console.WindowWidth - chooseBrokenOptionText1.Length) / 2, Console.CursorTop);
             Console.WriteLine(chooseBrokenOptionText1);
             Console.SetCursorPosition((Console.WindowWidth - chooseBrokenOptionText2.Length) / 2, Console.CursorTop);
             Console.WriteLine(chooseBrokenOptionText2);
             Console.SetCursorPosition((Console.WindowWidth - chooseBrokenOptionText3.Length) / 2, Console.CursorTop);
             Console.WriteLine(chooseBrokenOptionText3);
-            VendingDisplay.WhiteTextColor();
+            VendingDisplay.TextColor(ConsoleColor.White);
             VendingDisplay.SetCursorPositionCenter();
         }
         private void KickMachineTextAndTextAlign()
@@ -230,7 +225,7 @@ namespace NutHouseVending
         private void VendingAlarm()
         {
             var wares = Storage.wares;
-            for (int i = 15; i > 0; i--)
+            for (var i = 15; i > 0; i--)
             {
                 Console.Beep();
                 if (i == 1)
@@ -240,8 +235,6 @@ namespace NutHouseVending
                 }
             }
         }
-        //---------------------------------
-
         private void ThanksForBuyingText(Ware ware)
         {
             var wares = Storage.wares;
@@ -256,28 +249,19 @@ namespace NutHouseVending
             Sleep500();
             ProductGotStuck();
             Console.SetCursorPosition((Console.WindowWidth - wareType.Length) / 2, Console.CursorTop);
-            VendingDisplay.GreenTextColor();
+            VendingDisplay.TextColor(ConsoleColor.Green);
             Console.WriteLine(wareType);
-            VendingDisplay.WhiteTextColor();
+            VendingDisplay.TextColor(ConsoleColor.White);
             Thread.Sleep(3000);
             MoneyHandler.AmountOfMoney = 0;
             Run(wares);
         }
-        private static void WhiteHeader()
+        private static void HeaderColor(ConsoleColor color)
         {
+            
             Console.Clear();
-            VendingDisplay.WhiteTextColor();
-            Console.WriteLine
-            (@"
-                ╬════════════════════════════════════════════════╬
-                ║               >>|| Error 404 ||<<              ║
-                ╬════════════════════════════════════════════════╬
-            ");
-        }
-        private static void RedHeader()
-        {
-            Console.Clear();
-            VendingDisplay.RedTextColor();
+            Console.ForegroundColor = color;
+            VendingDisplay.TextColor(color);
             Console.WriteLine
             (@"
                 ╬════════════════════════════════════════════════╬

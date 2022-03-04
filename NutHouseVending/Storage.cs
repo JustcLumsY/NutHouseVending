@@ -1,18 +1,49 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using NutHouseVending.Interfaces;
 
 namespace NutHouseVending
 {
     internal class Storage 
     {
-        public static List<Ware> wares { get; set; }
-      
+        public static List<Ware> wares { get; private set; }
+
         public Storage()
         {
             wares = new List<Ware>();
+        }
+        
+        public bool CheckStorage(wareEnum type)
+        {
+            var ware = wares.FirstOrDefault(x => x.Type == type);
+            if (ware != null)
+            {
+                return ware.Amount > 0;
+            }
+            return false;
+        }
+        public Ware GetWareInfo(wareEnum type, List<Ware> wares)
+        {
+            var ware = wares.FirstOrDefault(x => x.Type == type);
+            GetWareInfoText(ware);
+            return ware;
+        }
+
+        private static void GetWareInfoText(Ware ware)
+        {
+            var resetText = "Change product: R ";
+            Console.WriteLine(resetText);
+            VendingDisplay.TextColor(ConsoleColor.Cyan);
+            Console.WriteLine($"                                ↓ Your choice ↓");
+            VendingDisplay.TextColor(ConsoleColor.White);
+            Console.WriteLine($"Buy Product: Enter              ---------------");
+            VendingDisplay.TextColor(ConsoleColor.Green);
+            Console.WriteLine($"                                    <{ware.Type}>");
+            VendingDisplay.TextColor(ConsoleColor.White);
+            Console.WriteLine($"                                     {ware.Price} Kr");
+            Console.WriteLine("");
+            Console.WriteLine("");
         }
         public void InitializeWares()
         {
@@ -31,39 +62,6 @@ namespace NutHouseVending
             wares.Add(new Ware("Chip", 20, 10, wareEnum.Chip));
             wares.Add(new Ware("Lays", 15, 10, wareEnum.Lays));
             wares.Add(new Ware("Nuts", 28, 10, wareEnum.Nuts));
-        }
-
-        public bool CheckStorage(wareEnum type)
-        {
-            Ware ware = wares.FirstOrDefault(x => x.Type == type);
-            if (ware != null)
-            {
-                return ware.Amount > 0;
-            }
-            return false;
-        }
-
-        public Ware GetWareInfo(wareEnum type, List<Ware> wares)
-        {
-            Ware ware = wares.FirstOrDefault(x => x.Type == type);
-            GetWareInfoText(ware);
-            return ware;
-        }
-
-        private static void GetWareInfoText(Ware ware)
-        {
-            var resetText = "Change product: R ";
-            Console.WriteLine(resetText);
-            VendingDisplay.CyanTextColor();
-            Console.WriteLine($"                                ↓ Your choice ↓");
-            VendingDisplay.WhiteTextColor();
-            Console.WriteLine($"Buy Product: Enter              ---------------");
-            VendingDisplay.GreenTextColor();
-            Console.WriteLine($"                                    <{ware.Type}>");
-            VendingDisplay.WhiteTextColor();
-            Console.WriteLine($"                                     {ware.Price} Kr");
-            Console.WriteLine("");
-            Console.WriteLine("");
         }
     }
 }

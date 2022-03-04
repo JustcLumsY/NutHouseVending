@@ -10,7 +10,6 @@ namespace NutHouseVending
         {
             if (AmountOfMoney >= price)
             {
-                
                 return true;
             }
             return false;

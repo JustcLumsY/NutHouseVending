@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
+using System.Drawing;
 using NutHouseVending.Interfaces;
 
 namespace NutHouseVending
 {
     internal class VendingDisplay
     {
-        public MoneyHandler Moneyhandler { get; set; }
+        public MoneyHandler Moneyhandler { get;}
         public VendingDisplay()
         {
             Moneyhandler = new MoneyHandler();
@@ -18,8 +17,7 @@ namespace NutHouseVending
         public void VendingMachineDisplay(List<Ware> wares)
         { 
             Console.Clear();
-            var totalCoin = MoneyHandler.AmountOfMoney;
-            CyanTextColor();
+            TextColor(ConsoleColor.Cyan);
             Console.WriteLine // Header
             ($@"
             ══════════════════════════════════════════════════════════
@@ -28,7 +26,7 @@ namespace NutHouseVending
             ║║║ ╬════════════════════════════════════════════════╬ ║║║
             ══════════════════════════════════════════════════════════    
             ");
-            WhiteTextColor();
+            TextColor(ConsoleColor.White);
             Console.WriteLine // Content
             (@$"
             ══════════════════════════════════════════════════════════
@@ -59,9 +57,9 @@ namespace NutHouseVending
         {
             var SelectText = "↑ Select a product number ↑";
             Console.SetCursorPosition((Console.WindowWidth - SelectText.Length) / 2, Console.CursorTop);
-            CyanTextColor();
+            TextColor(ConsoleColor.Cyan);
             Console.WriteLine(SelectText);
-            WhiteTextColor();
+            TextColor(ConsoleColor.White);
         }
         public void CheckAmountOfMoney(List<Ware> wares, Ware ware)
         {
@@ -72,47 +70,45 @@ namespace NutHouseVending
         {
             var notEnoughMoneyText = "<Not enough money, please insert>";
             var youPicked = $"{ware.Type}";
-            //var kr = $"{ware.Price}Kr";
             var Coins = MoneyHandler.AmountOfMoney;
             VendingMachineDisplay(wares);
-            Console.SetCursorPosition((Console.WindowWidth - notEnoughMoneyText.Length) / 2, Console.CursorTop);
-            RedTextColor();
-            Console.WriteLine(notEnoughMoneyText);
-            GreenTextColor();
+            if (Coins <= 0) 
+            {
+                Console.SetCursorPosition((Console.WindowWidth - notEnoughMoneyText.Length) / 2, Console.CursorTop);
+                TextColor(ConsoleColor.Red);
+                Console.WriteLine($"{notEnoughMoneyText}");
+            }
+            TextColor(ConsoleColor.Cyan);
+            Console.WriteLine($"                                 ↓ Your choice ↓");
+            TextColor(ConsoleColor.White);
+            Console.WriteLine($"                                 ---------------");
+            TextColor(ConsoleColor.Green);
             Console.SetCursorPosition((Console.WindowWidth - youPicked.Length) / 2, Console.CursorTop);
-            Console.WriteLine(@$"<{youPicked}>");
-            WhiteTextColor();
-            SetCursorPositionCenter();
+            Console.WriteLine($"<{youPicked}>");
+            TextColor(ConsoleColor.Cyan);
+            Console.SetCursorPosition((Console.WindowWidth - 35) / 2, Console.CursorTop);
+            Console.WriteLine($"          Coins: {Coins}Kr");
+            TextColor(ConsoleColor.White);
+            SetCursorPositionCenter(); 
         }
         public void SoldOut(List<Ware> wares)
         {
             VendingMachineDisplay(wares);
-            RedTextColor();
+            TextColor(ConsoleColor.Red);
             Console.WriteLine(wares);
             var soldOutText = "<|SOLD OUT|>";
             Console.SetCursorPosition((Console.WindowWidth - soldOutText.Length) / 2, Console.CursorTop);
             Console.WriteLine(soldOutText);
             Console.ResetColor();
         }
-        public static void WhiteTextColor()
-        {
-            Console.ForegroundColor = ConsoleColor.White;
-        }
-        public static void GreenTextColor()
-        {
-            Console.ForegroundColor = ConsoleColor.Green;
-        }
-        public static void RedTextColor()
-        {
-            Console.ForegroundColor = ConsoleColor.Red;
-        }   
-        public static void CyanTextColor()
-        {
-            Console.ForegroundColor = ConsoleColor.Cyan;
-        }
+ 
         public static void SetCursorPositionCenter()
         {
             Console.SetCursorPosition((Console.WindowWidth) / 2, Console.CursorTop);
+        }
+        public static void TextColor(ConsoleColor color)
+        {
+            Console.ForegroundColor = color;
         }
     }
 }
